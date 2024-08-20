@@ -1,0 +1,14 @@
+// Query for accessing the CKAN API package_search endpoint
+// https://data.humdata.org/api/action/package_search?fq=cod_level:(cod-standard%20and%20cod-enhanced)+dataseries_name:COD\%20-\%20Subnational\%20Population\%20Statistics&rows=20
+// start is the offset equivalent, rows is the limit equivalent
+let
+    Source = Json.Document(Web.Contents("https://data.humdata.org/api/action/package_search" & 
+    "?fq=cod_level:(cod-standard and cod-enhanced)+dataseries_name:COD\ -\ Subnational\ Population\ Statistics"&"&rows=200", 
+    [Headers=[#"Content-Type"="application/json", 
+    HDX_API_KEY=""]])), //Get an HDX_API_KEY from https://data.humdata.org/user/[HDX username]/api-tokens
+    result = Source[result],
+    results = result[results],
+    #"Converted to Table" = Table.FromList(results, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"archived", "caveats", "cod_level", "creator_user_id", "data_update_frequency", "dataseries_name", "dataset_date", "dataset_preview", "dataset_source", "due_date", "has_geodata", "has_quickcharts", "has_showcases", "id", "is_requestdata_type", "isopen", "last_modified", "license_id", "license_title", "license_url", "maintainer", "metadata_created", "metadata_modified", "methodology", "methodology_other", "name", "notes", "num_resources", "num_tags", "organization", "overdue_date", "owner_org", "package_creator", "pageviews_last_14_days", "private", "qa_completed", "solr_additions", "state", "subnational", "title", "total_res_downloads", "type", "updated_by_script", "url", "version", "groups", "resources", "tags", "relationships_as_subject", "relationships_as_object", "review_date"}, {"Column1.archived", "Column1.caveats", "Column1.cod_level", "Column1.creator_user_id", "Column1.data_update_frequency", "Column1.dataseries_name", "Column1.dataset_date", "Column1.dataset_preview", "Column1.dataset_source", "Column1.due_date", "Column1.has_geodata", "Column1.has_quickcharts", "Column1.has_showcases", "Column1.id", "Column1.is_requestdata_type", "Column1.isopen", "Column1.last_modified", "Column1.license_id", "Column1.license_title", "Column1.license_url", "Column1.maintainer", "Column1.metadata_created", "Column1.metadata_modified", "Column1.methodology", "Column1.methodology_other", "Column1.name", "Column1.notes", "Column1.num_resources", "Column1.num_tags", "Column1.organization", "Column1.overdue_date", "Column1.owner_org", "Column1.package_creator", "Column1.pageviews_last_14_days", "Column1.private", "Column1.qa_completed", "Column1.solr_additions", "Column1.state", "Column1.subnational", "Column1.title", "Column1.total_res_downloads", "Column1.type", "Column1.updated_by_script", "Column1.url", "Column1.version", "Column1.groups", "Column1.resources", "Column1.tags", "Column1.relationships_as_subject", "Column1.relationships_as_object", "Column1.review_date"})
+in
+    #"Expanded Column1"
