@@ -4,8 +4,9 @@
 let
     Source = Json.Document(Web.Contents("https://data.humdata.org/api/action/package_search" & 
     "?fq=cod_level:(cod-standard and cod-enhanced)+dataseries_name:COD\ -\ Subnational\ Population\ Statistics"&"&rows=200", 
-    [Headers=[#"Content-Type"="application/json", 
-    HDX_API_KEY=""]])), //Get an HDX_API_KEY from https://data.humdata.org/user/[HDX username]/api-tokens
+    [Headers=[#"Content-Type"="application/json",
+    //Get an HDX_API_KEY from https://data.humdata.org/user/[HDX username]/api-tokens
+    HDX_API_KEY=""]])), 
     result = Source[result],
     results = result[results],
     #"Converted to Table" = Table.FromList(results, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
